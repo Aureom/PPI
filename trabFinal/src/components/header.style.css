@@ -1,0 +1,11 @@
+.header-container {
+	background-color: #161616;
+	text-align: center;
+}
+
+.header-text-logo {
+	font-size: 2.5em;
+	font-weight: 900;
+	text-transform: uppercase;
+	text-decoration: none;
+}

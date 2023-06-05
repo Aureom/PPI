@@ -36,12 +36,13 @@ session_start();
             </div>
           </div>
         HTML;
-  } else
+  } else {
     echo <<<HTML
           <div>
             <a href="/trabFinal/src/pages/login.php">Ja é de casa? Entre aqui</a>
             <a href="/trabFinal/src/pages/register.php">Cadastre-se aqui, leva só 1 minutinho</a>
           </div>
         HTML;
+  }
   ?>
 </header>

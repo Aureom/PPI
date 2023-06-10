@@ -12,12 +12,6 @@ class UserService {
     }
 
     public function register($email, $name, $password): ?User {
-        $user = new User($email, $name, $password);
-
-        if ($this->userRepository->createNewUser($user)) {
-            return $user;
-        }
-
-        return null;
+        return $this->userRepository->createNewUser($email, $name, $password);
     }
 }

@@ -9,11 +9,11 @@ class UserRepository
         $this->mysqlConnector = $mysqlConnector;
 
         $sql = "CREATE TABLE IF NOT EXISTS User (
-                    id INT PRIMARY KEY,
+                    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                     name VARCHAR(255) NOT NULL,
-                    cpf VARCHAR(11) NOT NULL,
-                    email VARCHAR(255),
-                    phone VARCHAR(15) NOT NULL,
+                    cpf VARCHAR(11) NULL,
+                    email VARCHAR(255) NOT NULL,
+                    phone VARCHAR(15) NULL,
                     password VARCHAR(512) NOT NULL
                 );";
         $this->mysqlConnector->query($sql);
@@ -27,27 +27,23 @@ class UserRepository
 
         $user = $stmt->fetch();
         if ($user) {
-            return new User($user['email'], $user['name'], $user['password']);
+            return new User($user['id'], $user['email'], $user['name'], $user['password']);
         }
 
         return null; // Caso o usuário não seja encontrado
     }
 
-    public function createNewUser(User $user): bool
+    public function createNewUser($email, $name, $password): ?User
     {
-        $email = $user->getEmail();
-        $name = $user->getName();
-        $password = $user->getHashedPassword();
-
         if ($this->findByEmail($email)) {
-            return false;
+            return null;
         }
 
         $sql = "INSERT INTO User (email, name, password) VALUES (?, ?, ?)";
         $stmt = $this->mysqlConnector->prepare($sql);
         $stmt->execute([$email, $name, $password]);
 
-        return true;
+        return $this->findByEmail($email);
     }
 
     public function authenticate($email, $password): ?User
@@ -59,7 +55,7 @@ class UserRepository
         $user = $stmt->fetch();
 
         if ($user && password_verify($password, $user['password'])) {
-            return new User($user['email'], $user['name'], $user['password']);
+            return new User($user['id'], $user['email'], $user['name'], $user['password']);
         }
 
         return null;

@@ -1,6 +1,8 @@
 <?php
 
 require_once __DIR__ . '/../model/User.php';
+require_once __DIR__ . '/../repository/UserRepository.php';
+require_once __DIR__ . '/../service/UserService.php';
 
 class Auth
 {
@@ -30,7 +32,6 @@ class Auth
 
     public static function user(): ?User
     {
-        session_start();
         if (isset($_SESSION['user'])) {
             return unserialize($_SESSION['user'], ['allowed_classes' => true]);
         }
@@ -40,7 +41,33 @@ class Auth
 
     public static function check(): bool
     {
-        session_start();
-        return isset($_SESSION['user_id']);
+        return isset($_SESSION['user']);
+    }
+
+    public static function register(string $email, string $name, string $password): ?User
+    {
+        $auth = new Auth();
+        $hashPassword = password_hash($password, PASSWORD_DEFAULT);
+        $user = $auth->userService->register($email, $name, $hashPassword);
+
+        if ($user) {
+            self::login($user);
+            return $user;
+        }
+
+        return null;
+    }
+
+    public static function attempt($email, $password): bool
+    {
+        $auth = new Auth();
+        $user = $auth->userService->login($email, $password);
+
+        if ($user) {
+            self::login($user);
+            return true;
+        }
+
+        return false;
     }
 }

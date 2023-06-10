@@ -4,7 +4,7 @@ require_once __DIR__ . "/../model/User.php";
 require_once __DIR__ . "/../repository/UserRepository.php";
 require_once __DIR__ . "/../service/UserService.php";
 include_once __DIR__ . "/../interfaces/errors/BadRequest.php";
-session_start();
+require_once __DIR__ . "/../security/Auth.php";
 
 // Cria uma instância do MySQLConnector
 $mysqlConnector = new MySQLConnector();
@@ -18,11 +18,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = $_POST['name'] ?? '';
     $password = $_POST['password'] ?? '';
 
-    $user = $userService->register($email, $name, $password);
+    $user = Auth::register($email, $name, $password);
     
     if($user) {
-        $_SESSION['user'] = serialize($user);
-
         header('Location: ../pages/home.php');
         exit;
     }

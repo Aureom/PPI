@@ -1,7 +1,7 @@
 <?php
-include __DIR__ . "/../components/header/header.php";
+require_once __DIR__ . "/../components/header/header.php";
 
-if (isset($_SESSION['user'])) {
+if (Auth::check()) {
     header('Location: /trabFinal/src/pages/home.php');
     exit;
 }
@@ -61,6 +61,8 @@ if (isset($_SESSION['user'])) {
                         return;
                     }
 
+                    console.log(response)
+                    console.log(response.redirected)
                     if (response.redirected)
                         window.location.href = response.url;
                 })

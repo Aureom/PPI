@@ -3,6 +3,7 @@
 require_once __DIR__ . "/../controller/ProductController.php";
 require_once __DIR__ . "/../repository/ProductRepository.php";
 
+
 $mysqlConnector = new MySQLConnector();
 $productRepository = new ProductRepository($mysqlConnector);
 $productController = new ProductController($productRepository);

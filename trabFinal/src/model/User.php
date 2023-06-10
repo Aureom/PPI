@@ -4,10 +4,10 @@ class User {
     protected string $email;
     protected string $name;
     protected string $password;
-    protected string $cpf;
-    protected string $phone;
+    protected ?string $cpf;
+    protected ?string $phone;
 
-    public function __construct($id, $email, $name, $password, $cpf, $phone) {
+    public function __construct($id, $email, $name, $password, $cpf = null, $phone = null) {
         $this->id = $id;
         $this->email = $email;
         $this->name = $name;

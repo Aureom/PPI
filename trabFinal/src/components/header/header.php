@@ -1,6 +1,6 @@
 <?php
 include __DIR__ . "/../../model/User.php";
-session_start();
+include __DIR__ . "/../../security/Auth.php";
 ?>
 <!DOCTYPE html>
 
@@ -22,8 +22,8 @@ session_start();
     </a>
 
     <?php
-    if (isset($_SESSION['user'])) {
-        $user = unserialize($_SESSION['user'], ['allowed_classes' => true]);
+    if (Auth::check()) {
+        $user = Auth::user();
         $userName = $user->getName();
 
         echo <<<HTML

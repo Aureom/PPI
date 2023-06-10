@@ -1,0 +1,76 @@
+.header-container {
+	display: grid;
+	grid-template-columns: auto 1fr;
+	align-items: center;
+	padding: 20px;
+	background-color: var(--header-bg-color);
+}
+
+.header-text-logo {
+	font-size: 24px;
+	font-weight: bolder;
+	text-decoration: none;
+	color: var(--text-color);
+}
+
+.header-user-info {
+	display: grid;
+	grid-gap: 10px;
+	justify-self: end;
+}
+
+.sign-in-button {
+	margin-right: 10px;
+	padding: 5px 10px;
+	border: 1px solid #007bff;
+	border-radius: 4px;
+	color: var(--text-color);
+	background-color: transparent;
+	transition: all 0.3s ease;
+}
+
+.sign-in-button:hover {
+	background-color: #007bff;
+	color: #fff;
+	transform: scale(1.1);
+}
+
+.sing-up-button {
+	padding: 5px 10px;
+	border: 1px solid #28a745;
+	border-radius: 4px;
+	color: var(--text-color);
+	background-color: #28a745;
+	transition: transform 0.3s ease;
+}
+
+.sing-up-button:hover {
+	color: #fff;
+	transform: scale(1.1);
+}
+
+.header-user-info h2 {
+	font-size: 16px;
+	margin: 0;
+	color: var(--text-color);
+}
+
+.header-user-info a {
+	text-decoration: none;
+	color: var(--text-color);
+}
+
+.cart-icon,
+.profile-icon,
+.logout-button {
+	padding: 5px 10px;
+	border: 1px solid var(--text-color);
+	border-radius: 4px;
+	color: var(--text-color);
+}
+
+.login-link,
+.register-link {
+	text-decoration: none;
+	color: var(--text-color);
+}

@@ -1,29 +1,43 @@
 <?php
 class User {
-    private $email;
-    private $name;
-    private $password;
+    protected int $id;
+    protected string $email;
+    protected string $name;
+    protected string $password;
+    protected string $cpf;
+    protected string $phone;
 
-    public function __construct($email, $name, $password) {
+    public function __construct($id, $email, $name, $password, $cpf, $phone) {
+        $this->id = $id;
         $this->email = $email;
         $this->name = $name;
         $this->password = $password;
+        $this->cpf = $cpf;
+        $this->phone = $phone;
     }
 
-    // Getters e setters para os atributos
-    public function getEmail() {
+    public function getId(): int {
+        return $this->id;
+    }
+
+    public function getEmail(): string {
         return $this->email;
     }
 
-    public function getName() {
+    public function getName(): string {
         return $this->name;
     }
 
-    public function getPassword() {
-        return $this->password;
+    public function getHashedPassword(): string {
+        return password_hash($this->password, PASSWORD_DEFAULT);
     }
 
-    public function getHashedPassword() {
-        return password_hash($this->password, "argon2id");
+    public function getCpf(): string {
+        return $this->cpf;
     }
+
+    public function getPhone(): string {
+        return $this->phone;
+    }
+
 }

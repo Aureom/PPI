@@ -1,63 +1,75 @@
 <?php
 
-// UserRepository.php
-class UserRepository {
-    private $mysqlConnector;
+class UserRepository
+{
+    private MySQLConnector $mysqlConnector;
 
-    public function __construct(MySQLConnector $mysqlConnector) {
+    public function __construct(MySQLConnector $mysqlConnector)
+    {
         $this->mysqlConnector = $mysqlConnector;
 
-        $sql = "CREATE TABLE IF NOT EXISTS users (
-            email VARCHAR(64) PRIMARY KEY,
-            name VARCHAR(255) NOT NULL,
-            password VARCHAR(512) NOT NULL
-        )";
+        $sql = "CREATE TABLE IF NOT EXISTS User (
+                    id INT PRIMARY KEY,
+                    name VARCHAR(255) NOT NULL,
+                    cpf VARCHAR(11) NOT NULL,
+                    email VARCHAR(255),
+                    phone VARCHAR(15) NOT NULL,
+                    password VARCHAR(512) NOT NULL
+                );";
         $this->mysqlConnector->query($sql);
     }
 
-    public function findByEmail($email) {
-        $sql = "SELECT * FROM users WHERE email = '$email'";
-        $result = $this->mysqlConnector->query($sql);
+    public function findByEmail($email): ?User
+    {
+        $sql = "SELECT * FROM User WHERE email = ?";
+        $stmt = $this->mysqlConnector->prepare($sql);
+        $stmt->execute([$email]);
 
-        // Transformar o resultado em um objeto UserModel
-        $row = mysqli_fetch_assoc($result);
-        if ($row) {
-            return new User($row['email'], $row['name'], $row['password']);
+        $user = $stmt->fetch();
+        if ($user) {
+            return new User($user['email'], $user['name'], $user['password']);
         }
 
         return null; // Caso o usuário não seja encontrado
     }
 
-    public function save(User $user) {
+    public function createNewUser(User $user): bool
+    {
         $email = $user->getEmail();
         $name = $user->getName();
         $password = $user->getHashedPassword();
 
-        $sql = "INSERT INTO users (email, name, password) VALUES ('$email', '$name', '$password')";
+        if ($this->findByEmail($email)) {
+            return false;
+        }
 
-        $this->mysqlConnector->query($sql);
+        $sql = "INSERT INTO User (email, name, password) VALUES (?, ?, ?)";
+        $stmt = $this->mysqlConnector->prepare($sql);
+        $stmt->execute([$email, $name, $password]);
 
         return true;
     }
 
-    public function authenticate($email, $password) {
-        $sql = "SELECT * FROM users WHERE email = '$email'";
-        $result = $this->mysqlConnector->query($sql);
+    public function authenticate($email, $password): ?User
+    {
+        $sql = "SELECT * FROM User WHERE email = ?";
+        $stmt = $this->mysqlConnector->prepare($sql);
+        $stmt->execute([$email]);
 
-        $user = $result->fetch();
-        
-        if ($user) {
-            if (password_verify($password, $user['password'])) {
-                return $user;
-            }
+        $user = $stmt->fetch();
+
+        if ($user && password_verify($password, $user['password'])) {
+            return new User($user['email'], $user['name'], $user['password']);
         }
 
-        return false;
+        return null;
     }
 
-    public function delete(User $user) {
+    public function delete(User $user): void
+    {
         $email = $user->getEmail();
-        $sql = "DELETE FROM users WHERE email = '$email'";
-        $this->mysqlConnector->query($sql);
+        $sql = "DELETE FROM User WHERE email = ?";
+        $stmt = $this->mysqlConnector->prepare($sql);
+        $stmt->execute([$email]);
     }
 }

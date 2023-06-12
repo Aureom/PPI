@@ -58,7 +58,7 @@ class Auth
         return isset($_SESSION['user']);
     }
 
-    public static function register(string $email, string $name, string $password): ?User
+    public static function register(string $email, string $name, string $password, string $cpf, string $phone): ?User
     {
         if (session_status() !== PHP_SESSION_ACTIVE) {
             session_start();
@@ -66,7 +66,7 @@ class Auth
 
         $auth = new Auth();
         $hashPassword = password_hash($password, PASSWORD_DEFAULT);
-        $user = $auth->userService->register($email, $name, $hashPassword);
+        $user = $auth->userService->register($email, $name, $hashPassword, $cpf, $phone);
 
         if ($user) {
             self::login($user);

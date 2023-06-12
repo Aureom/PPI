@@ -67,4 +67,8 @@ class MySQLConnector {
 
         return $stmt;
     }
+
+    public function lastInsertId(): int {
+        return $this->connection->lastInsertId();
+    }
 }

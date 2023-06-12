@@ -7,11 +7,15 @@ class UserService {
         $this->userRepository = $userRepository;
     }
 
+    public function findByEmail($email): ?User {
+        return $this->userRepository->findByEmail($email);
+    }
+
     public function login($email, $password): ?User {
         return $this->userRepository->authenticate($email, $password);
     }
 
-    public function register($email, $name, $password): ?User {
-        return $this->userRepository->createNewUser($email, $name, $password);
+    public function register($email, $name, $password, $cpf, $phone): ?User {
+        return $this->userRepository->createNewUser($email, $name, $password, $cpf, $phone);
     }
 }

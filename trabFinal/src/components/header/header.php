@@ -17,9 +17,14 @@ include __DIR__ . "/../../security/Auth.php";
 </head>
 
 <header class="header-container">
-    <a href="/trabFinal/src/pages/home.php">
-        <h1 class="header-text-logo">MERCADO FÁCIL</h1>
-    </a>
+    <div class="header-logo-container">
+        <img class="header-logo"
+             src="https://cdn.discordapp.com/attachments/1115267711753277524/1117584648923512894/DALL_E_2023-06-11_19.34.02_-_Create_a_marketplace_logo__with_the_letter__M__with_a_transparent_backgroud__modern_logo__darkmode__attractive_design__no_additional_text-removebg-preview.png"
+             alt="Logo">
+        <a href="/trabFinal/src/pages/home.php">
+            <h1 class="header-text-logo">MERCADO FÁCIL</h1>
+        </a>
+    </div>
 
     <?php
     if (Auth::check()) {
@@ -29,9 +34,9 @@ include __DIR__ . "/../../security/Auth.php";
         echo <<<HTML
           <div class="header-user-info">
             <h2>Olá, $userName</h2>
-            <div>
-              <a href="/trabFinal/src/pages/cart.php">Carrinho</a>
+            <div class="header-user-options">
               <a href="/trabFinal/src/pages/profile.php">Perfil</a>
+              <a href="/trabFinal/src/pages/createProduct.php">Cadastrar produto</a>
               <a href="/trabFinal/src/usecases/logout.php">Sair</a>
             </div>
           </div>

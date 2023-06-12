@@ -6,6 +6,18 @@
 	background-color: var(--header-bg-color);
 }
 
+.header-logo-container {
+	display: grid;
+	grid-template-columns: auto 1fr;
+	align-items: center;
+}
+
+.header-logo {
+	width: 50px;
+	height: 50px;
+	margin-right: 10px;
+}
+
 .header-text-logo {
 	font-size: 24px;
 	font-weight: bolder;
@@ -53,6 +65,18 @@
 	font-size: 16px;
 	margin: 0;
 	color: var(--text-color);
+}
+
+.header-user-options a {
+	margin-right: 10px;
+}
+
+.header-user-options a:last-child {
+	margin-right: 0;
+}
+
+.header-user-options a:hover {
+	color: #adc2d0;
 }
 
 .header-user-info a {

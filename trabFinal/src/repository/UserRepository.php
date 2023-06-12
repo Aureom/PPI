@@ -27,21 +27,21 @@ class UserRepository
 
         $user = $stmt->fetch();
         if ($user) {
-            return new User($user['id'], $user['email'], $user['name'], $user['password']);
+            return new User($user['id'], $user['email'], $user['name'], $user['password'], $user['cpf'], $user['phone']);
         }
 
         return null; // Caso o usuário não seja encontrado
     }
 
-    public function createNewUser($email, $name, $password): ?User
+    public function createNewUser($email, $name, $password, $cpf, $phone): ?User
     {
         if ($this->findByEmail($email)) {
             return null;
         }
 
-        $sql = "INSERT INTO User (email, name, password) VALUES (?, ?, ?)";
+        $sql = "INSERT INTO User (email, name, password, cpf, phone) VALUES (?, ?, ?, ?, ?)";
         $stmt = $this->mysqlConnector->prepare($sql);
-        $stmt->execute([$email, $name, $password]);
+        $stmt->execute([$email, $name, $password, $cpf, $phone]);
 
         return $this->findByEmail($email);
     }
@@ -55,7 +55,7 @@ class UserRepository
         $user = $stmt->fetch();
 
         if ($user && password_verify($password, $user['password'])) {
-            return new User($user['id'], $user['email'], $user['name'], $user['password']);
+            return new User($user['id'], $user['email'], $user['name'], $user['password'], $user['cpf'], $user['phone']);
         }
 
         return null;

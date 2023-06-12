@@ -57,7 +57,7 @@ if (Auth::check()) {
                 .then(async response => {
                     if (!response.ok) {
                         const data = await response.json();
-                        errorMessage(data);
+                        errorMessage(data.message);
                         return;
                     }
 
@@ -67,12 +67,12 @@ if (Auth::check()) {
                         window.location.href = response.url;
                 })
                 .catch(error => {
-                    errorElement.innerText = "Erro ao fazer login";
+                    errorMessage("Erro ao fazer login");
                 });
         });
 
-        function errorMessage(data) {
-            errorElement.innerText = data.message;
+        function errorMessage(message) {
+            errorElement.innerText = message;
 
             errorElement.style.opacity = '1';
             errorElement.style.display = 'block';

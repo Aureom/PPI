@@ -32,11 +32,11 @@ class User {
         return password_hash($this->password, PASSWORD_DEFAULT);
     }
 
-    public function getCpf(): string {
+    public function getCpf(): ?string {
         return $this->cpf;
     }
 
-    public function getPhone(): string {
+    public function getPhone(): ?string {
         return $this->phone;
     }
 

@@ -19,6 +19,7 @@ class BaseError {
     }
 
     public function toJson(): false|string {
+        header('Content-Type: application/json');
         return json_encode([
             'message' => $this->message,
             'code' => $this->code

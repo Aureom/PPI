@@ -21,6 +21,16 @@ include __DIR__ . "/../components/header/header.php";
                        required>
             </div>
             <div class="form-group">
+                <label for="cpf" class="form-label">CPF:</label>
+                <input type="text" id="cpf" name="cpf" class="form-input" placeholder="Digite seu CPF aqui"
+                       required>
+            </div>
+            <div class="form-group">
+                <label for="phone" class="form-label">Telefone:</label>
+                <input type="text" id="phone" name="phone" class="form-input" placeholder="Digite seu telefone aqui"
+                       required>
+            </div>
+            <div class="form-group">
                 <label for="password" class="form-label">Senha:</label>
                 <input type="password" id="password" name="password" class="form-input"
                        placeholder="Digite sua senha aqui" required>
@@ -56,7 +66,7 @@ include __DIR__ . "/../components/header/header.php";
                 .then(async response => {
                     if (!response.ok) {
                         const data = await response.json();
-                        errorElement.innerText = data.message;
+                        errorMessage(data.message);
                         return;
                     }
 
@@ -64,9 +74,26 @@ include __DIR__ . "/../components/header/header.php";
                         window.location.href = response.url;
                 })
                 .catch(error => {
-                    console.error(error);
+                    errorMessage(error);
                 });
         });
+
+        function errorMessage(message) {
+            errorElement.innerText = message;
+
+            errorElement.style.opacity = '1';
+            errorElement.style.display = 'block';
+
+            // opacity: 1 -> opacity: 0 transition
+            setTimeout(() => {
+                errorElement.style.opacity = '0';
+            }, 3000);
+
+            setTimeout(() => {
+                errorElement.style.display = 'none';
+            }, 3500);
+
+        }
     </script>
 
 <?php

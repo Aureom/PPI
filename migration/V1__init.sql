@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS User
 
 CREATE TABLE Product
 (
-    id           INT PRIMARY KEY,
+    id           INT AUTO_INCREMENT PRIMARY KEY,
     title        VARCHAR(255),
     description  TEXT,
     price        DECIMAL(10, 2),
@@ -42,7 +42,7 @@ CREATE TABLE Product
 
 CREATE TABLE Interest
 (
-    id         INT PRIMARY KEY,
+    id         INT AUTO_INCREMENT PRIMARY KEY,
     message    TEXT,
     date_time  DATETIME,
     contact    VARCHAR(255),

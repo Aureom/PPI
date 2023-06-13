@@ -14,7 +14,7 @@ class Product implements JsonSerializable
     protected int $userId;
     protected DateTime $createdAt;
     protected array $images;
-
+    protected array $interests;
 
     public function __construct(?int     $id,
                                 string   $title,
@@ -142,6 +142,11 @@ class Product implements JsonSerializable
         return count($this->images) > 0;
     }
 
+    public function hasInterest(): bool
+    {
+        return count($this->interests) > 0;
+    }
+
     public function setTitle(string $title): void
     {
         $this->title = $title;
@@ -197,6 +202,15 @@ class Product implements JsonSerializable
         $this->images = $productPhotos;
     }
 
+    public function setInterests(array $interests): void
+    {
+        $this->interests = $interests;
+    }
+
+    public function getInterests(): array
+    {
+        return $this->interests;
+    }
 
     public function jsonSerialize(): array
     {
@@ -212,7 +226,8 @@ class Product implements JsonSerializable
             "categoryId" => $this->categoryId,
             "userId" => $this->userId,
             "createdAt" => $this->createdAt->format("Y-m-d H:i:s"),
-            "images" => $this->images
+            "images" => $this->images,
+            "interests" => $this->interests
         ];
     }
 }

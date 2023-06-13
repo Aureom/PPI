@@ -43,7 +43,7 @@ class InterestRepository
 
         $interests = [];
         while ($row = $stmt->fetch()) {
-            $interests[] = new Interest($row['id'], $row['message'], $row['date_time'], $row['contact'], $row['product_id']);
+            $interests[] = new Interest($row['id'], $row['message'], new DateTime($row['date_time']), $row['contact'], $row['product_id']);
         }
 
         return $interests;

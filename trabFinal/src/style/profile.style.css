@@ -92,7 +92,7 @@
     margin-bottom: 10px;
 }
 
-.product-button {
+.product-button, .product-button-interest {
     display: inline-block;
     background-color: #ff5555;
     color: var(--text-color);
@@ -103,6 +103,41 @@
     transition: background-color 0.3s ease;
 }
 
-.product-button:hover {
+.product-button:hover, .product-button-interest:hover {
     background-color: #ff0000;
+}
+
+.dialog::backdrop {
+    background-color: rgba(0,0,0,0.5);
+}
+
+.dialog {
+    background-color: var(--bg-color);
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 0 10px 0 rgba(255,255,255,0.15);
+    padding: 20px;
+    width: 500px;
+    max-width: 100%;
+    color: var(--text-color);
+}
+
+.dialog-header {
+    margin: 0;
+    font-size: 24px;
+    color: var(--text-color);
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.dialog-close-button {
+    justify-self: end;
+    background-color: transparent;
+    border: none;
+    color: var(--text-color);
+    height: 30px;
+    font-size: 24px;
+    cursor: pointer;
 }

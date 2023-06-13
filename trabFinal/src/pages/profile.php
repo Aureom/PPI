@@ -58,6 +58,33 @@ $productService = new ProductService($productRepository);
                             <p class="product-description"><?php echo $product->getDescription(); ?></p>
                             <p class="product-price"><?php echo $product->getFormattedPrice(); ?></p>
                             <button class="product-button" id="<?php echo $product->getId(); ?>">Excluir</button>
+                            <?php
+                            if ($product->hasInterest()) {
+                                echo "<button class='product-button-interest' id='{$product->getId()}'>Interessados</button>";
+//                               Dialog to show interested users
+                                echo <<<HTML
+                                        <dialog id="dialog-{$product->getId()}" class="dialog">
+                                            <div class="dialog-container">
+                                                <div class="dialog-header">
+                                                    <h3 class="dialog-title">Interessados</h3>
+                                                    <button class="dialog-close-button">X</button>
+                                                </div>
+                                                <div class="dialog-body">
+                                                    <ul class="dialog-list">
+                                        HTML;
+                                foreach ($product->getInterests() as $interest) {
+                                    echo "<li class='dialog-list-item'>{$interest->getMessage()} - {$interest->getContact()}</li>";
+                                }
+                                echo <<<HTML
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </dialog>
+                                        HTML;
+
+                            } else {
+                                echo "<p class='product-text'>Nenhum interessado</p>";
+                            } ?>
                         </div>
                     </div>
                     <?php
@@ -79,6 +106,19 @@ $productService = new ProductService($productRepository);
                 method: 'DELETE'
             }).then(() => {
                 window.location.reload();
+            })
+        })
+    })
+
+    const interestButtons = document.querySelectorAll('.product-button-interest');
+    interestButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const productId = button.id;
+            const dialog = document.querySelector(`#dialog-${productId}`);
+            dialog.showModal();
+            const closeButton = dialog.querySelector('.dialog-close-button');
+            closeButton.addEventListener('click', () => {
+                dialog.close();
             })
         })
     })

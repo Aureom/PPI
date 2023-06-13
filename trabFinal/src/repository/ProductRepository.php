@@ -1,15 +1,21 @@
 <?php
 
+require_once __DIR__ . "/../database/MySQLConnector.php";
+require_once __DIR__ . "/../model/Product.php";
+require_once __DIR__ . "/../repository/ProductPhotoRepository.php";
+require_once __DIR__ . "/../repository/InterestRepository.php";
+
 class ProductRepository
 {
-
     private MySQLConnector $mysqlConnector;
     private ProductPhotoRepository $productPhotoRepository;
+    private InterestRepository $interestRepository;
 
     public function __construct(MySQLConnector $mysqlConnector)
     {
         $this->mysqlConnector = $mysqlConnector;
         $this->productPhotoRepository = new ProductPhotoRepository($mysqlConnector);
+        $this->interestRepository = new InterestRepository($mysqlConnector);
 
         $sql = "CREATE TABLE IF NOT EXISTS Product(
                     id           INT AUTO_INCREMENT PRIMARY KEY,
@@ -56,6 +62,7 @@ class ProductRepository
         foreach ($products as $product) {
             $productToAdd = new Product($product['id'], $product['title'], $product['description'], $product['price'], $product['zip_code'], $product['neighborhood'], $product['city'], $product['state'], $product['category_id'], $product['user_id'], new DateTime($product['created_at']));
             $productToAdd->setImages($this->productPhotoRepository->findAllByProductId($productToAdd->getId()));
+            $productToAdd->setInterests($this->interestRepository->findAllByProductId($productToAdd->getId()));
             $result[] = $productToAdd;
         }
 

@@ -10,7 +10,6 @@ require_once __DIR__ . "/../security/Auth.php";
 class ProductService
 {
     private ProductRepository $productRepository;
-    private ProductPhotoRepository $productPhotoRepository;
 
     public function __construct(ProductRepository $productRepository)
     {
@@ -56,7 +55,8 @@ class ProductService
         return null;
     }
 
-    public function deleteProduct(int $productId): void {
+    public function deleteProduct(int $productId): void
+    {
         $user = Auth::user(); // get the logged-in user
 
         if ($user === null) {
@@ -80,5 +80,23 @@ class ProductService
         }
 
         $this->productRepository->delete($product);
+    }
+
+    public function addInterest($productId, $message, $phone): ?Interest
+    {
+        $product = $this->productRepository->findById($productId);
+
+        if ($product === null) {
+            $badRequest = new BadRequest("O produto não existe");
+            echo $badRequest->toJson();
+            return null;
+        }
+
+        return $this->interestRepository->save($productId, $message, $phone);
+    }
+
+    public function findById($productId): ?Product
+    {
+        return $this->productRepository->findById($productId);
     }
 }

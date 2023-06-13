@@ -28,6 +28,21 @@
     margin-bottom: 10px;
 }
 
+.profile-edit-button {
+    display: inline-block;
+    background-color: #ff5555;
+    color: var(--text-color);
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.profile-edit-button:hover {
+    background-color: #ff0000;
+}
+
 .product-list {
     margin-top: 20px;
 }

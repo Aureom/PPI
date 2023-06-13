@@ -33,6 +33,20 @@ class UserRepository
         return null; // Caso o usuário não seja encontrado
     }
 
+    public function findById($id): ?User
+    {
+        $sql = "SELECT * FROM User WHERE id = ?";
+        $stmt = $this->mysqlConnector->prepare($sql);
+        $stmt->execute([$id]);
+
+        $user = $stmt->fetch();
+        if ($user) {
+            return new User($user['id'], $user['email'], $user['name'], $user['password'], $user['cpf'], $user['phone']);
+        }
+
+        return null; // Caso o usuário não seja encontrado
+    }
+
     public function createNewUser($email, $name, $password, $cpf, $phone): ?User
     {
         if ($this->findByEmail($email)) {
@@ -67,5 +81,15 @@ class UserRepository
         $sql = "DELETE FROM User WHERE email = ?";
         $stmt = $this->mysqlConnector->prepare($sql);
         $stmt->execute([$email]);
+    }
+
+    public function updateUser($id, $name, $password, $cpf, $phone): ?User
+    {
+        $hashPassword = password_hash($password, PASSWORD_DEFAULT);
+        $sql = "UPDATE User SET name = ?, password = ?, cpf = ?, phone = ? WHERE id = ?";
+        $stmt = $this->mysqlConnector->prepare($sql);
+        $stmt->execute([$name, $hashPassword, $cpf, $phone, $id]);
+
+        return $this->findById($id);
     }
 }

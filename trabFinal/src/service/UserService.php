@@ -18,4 +18,8 @@ class UserService {
     public function register($email, $name, $password, $cpf, $phone): ?User {
         return $this->userRepository->createNewUser($email, $name, $password, $cpf, $phone);
     }
+
+    public function update($id, $name, $password, $cpf, $phone): ?User {
+        return $this->userRepository->updateUser($id, $name, $password, $cpf, $phone);
+    }
 }

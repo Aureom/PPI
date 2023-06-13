@@ -33,6 +33,7 @@ $productService = new ProductService($productRepository);
         <p class="profile-text">Email: <?php echo $user->getEmail(); ?></p>
         <p class="profile-text">CPF: <?php echo $user->getCpf(); ?></p>
         <p class="profile-text">Telefone: <?php echo $user->getPhone(); ?></p>
+        <a class="profile-edit-button" href="/trabFinal/src/pages/editProfile.php">Editar perfil</a>
     </div>
     <div class="profile-products">
         <h3 class="profile-title">Produtos cadastrados</h3>

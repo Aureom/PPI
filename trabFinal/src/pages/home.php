@@ -54,6 +54,24 @@ $products = $productService->findRecentProducts();
     </head>
 
     <main class="main-container">
+        <dialog class="dialog-interest">
+            <div class="dialog-content">
+                <form action="/trabFinal/src/usecases/product.php/interest" method="post" class="interest-form">
+                    <input type="hidden" name="product_id" id="product_id">
+                    <div class="form-group">
+                        <label for="message">Por que você tem interesse neste produto?</label>
+                        <textarea name="message" id="message" cols="30" rows="5" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Telefone de contato:</label>
+                        <input type="tel" name="phone" id="phone" placeholder="Telefone para contato" required>
+                    </div>
+                    <div class="form-group">
+                        <button class="interest-button" type="submit">Enviar</button>
+                    </div>
+                </form>
+            </div>
+        </dialog>
         <div class="product-list">
             <?php foreach ($products as $product) { ?>
                 <div class="product-card">
@@ -68,92 +86,127 @@ $products = $productService->findRecentProducts();
                         <h3 class="product-title"><?php echo $product->getTitle(); ?></h3>
                         <p class="product-description"><?php echo $product->getDescription(); ?></p>
                         <p class="product-price"><?php echo $product->getFormattedPrice(); ?></p>
-                        <button class="product-button">Adicionar ao carrinho</button>
+                        <button class="product-button">Demostrar interesse</button>
                     </div>
                 </div>
             <?php } ?>
         </div>
     </main>
 
-<script>
-    let page = 1;
-    let loading = false;
-    let finished = false;
-    const productContainer = document.querySelector('.product-list');
+    <script>
+        let page = 1;
+        let loading = false;
+        let finished = false;
+        const productContainer = document.querySelector('.product-list');
 
-    const loadProducts = async () => {
-        if (loading || finished) {
-            return;
-        }
-
-        loading = true;
-        const response = await fetch(`/trabFinal/src/usecases/product.php/list?page=${page}`);
-        const products = await response.json();
-
-        if (products.length === 0) {
-            finished = true;
-            return;
-        }
-
-        products.forEach(product => {
-            const productCard = document.createElement('div');
-            productCard.classList.add('product-card');
-
-            const productImage = document.createElement('img');
-            productImage.classList.add('product-image');
-            if (product.images.length === 0) {
-                productImage.src = 'https://placehold.jp/150x150.png';
-            } else {
-                productImage.src = product.images[0];
+        const loadProducts = async () => {
+            if (loading || finished) {
+                return;
             }
-            productImage.alt = 'Product Image';
 
-            const productInfo = document.createElement('div');
-            productInfo.classList.add('product-info');
-            productInfo.id = product.id;
+            loading = true;
+            const response = await fetch(`/trabFinal/src/usecases/product.php/list?page=${page}`);
+            const products = await response.json();
 
-            const productTitle = document.createElement('h3');
-            productTitle.classList.add('product-title');
-            productTitle.innerText = product.title;
+            if (products.length === 0) {
+                finished = true;
+                return;
+            }
 
-            const productDescription = document.createElement('p');
-            productDescription.classList.add('product-description');
-            productDescription.innerText = product.description;
+            products.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.classList.add('product-card');
 
-            const productPrice = document.createElement('p');
-            productPrice.classList.add('product-price');
-            productPrice.innerText = "R$ " + (product.price / 100).toFixed(2).replace(".", ",");
+                const productImage = document.createElement('img');
+                productImage.classList.add('product-image');
+                if (product.images.length === 0) {
+                    productImage.src = 'https://placehold.jp/150x150.png';
+                } else {
+                    productImage.src = product.images[0];
+                }
+                productImage.alt = 'Product Image';
+
+                const productInfo = document.createElement('div');
+                productInfo.classList.add('product-info');
+                productInfo.id = product.id;
+
+                const productTitle = document.createElement('h3');
+                productTitle.classList.add('product-title');
+                productTitle.innerText = product.title;
+
+                const productDescription = document.createElement('p');
+                productDescription.classList.add('product-description');
+                productDescription.innerText = product.description;
+
+                const productPrice = document.createElement('p');
+                productPrice.classList.add('product-price');
+                productPrice.innerText = "R$ " + (product.price / 100).toFixed(2).replace(".", ",");
 
 
-            const productButton = document.createElement('button');
-            productButton.classList.add('product-button');
-            productButton.innerText = 'Adicionar ao carrinho';
+                const productButton = document.createElement('button');
+                productButton.classList.add('product-button');
+                productButton.innerText = 'Demostrar interesse';
 
-            productInfo.appendChild(productTitle);
-            productInfo.appendChild(productDescription);
-            productInfo.appendChild(productPrice);
-            productInfo.appendChild(productButton);
+                productInfo.appendChild(productTitle);
+                productInfo.appendChild(productDescription);
+                productInfo.appendChild(productPrice);
+                productInfo.appendChild(productButton);
 
-            productCard.appendChild(productImage);
-            productCard.appendChild(productInfo);
+                productCard.appendChild(productImage);
+                productCard.appendChild(productInfo);
 
-            productContainer.appendChild(productCard);
+                productContainer.appendChild(productCard);
+            });
+
+            page++;
+            loading = false;
+        }
+
+        window.addEventListener('scroll', () => {
+            const {scrollTop, scrollHeight, clientHeight} = document.documentElement;
+
+            if (scrollTop + clientHeight >= scrollHeight - 5) {
+                loadProducts();
+            }
         });
 
-        page++;
-        loading = false;
-    }
+        const buttons = document.querySelectorAll('.product-button');
+        const dialog = document.querySelector('.dialog-interest');
+        const productId = document.querySelector('#product_id');
+        const message = document.querySelector('#message');
+        const phone = document.querySelector('#phone');
+        const interestForm = document.querySelector('.interest-form');
 
-    window.addEventListener('scroll', () => {
-        const {scrollTop, scrollHeight, clientHeight} = document.documentElement;
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                productId.value = button.parentElement.id;
+                dialog.showModal();
+            });
+        });
 
-        if (scrollTop + clientHeight >= scrollHeight - 5) {
-            loadProducts();
-        }
-    });
+        interestForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const data = new FormData();
+            data.append('product_id', productId.value);
+            data.append('message', message.value);
+            data.append('phone', phone.value);
 
-    loadProducts();
-</script>
+            fetch('/trabFinal/src/usecases/product.php/interest', {
+                method: 'POST',
+                body: data
+            }).then(response => {
+                if (response.status === 201) {
+                    dialog.close();
+                    alert('Sua mensagem foi enviada ao vendedor!');
+                } else {
+                    alert('Erro ao enviar mensagem. Tente novamente mais tarde.');
+                }
+            });
+        });
+
+
+        loadProducts();
+    </script>
 
 <?php
 include __DIR__ . "/../components/footer/footer.php";

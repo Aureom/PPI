@@ -43,13 +43,6 @@ class CreateProductRequest
             exit;
         }
 
-        // Validate images (can be optional)
-        if (!empty($this->images) && !$this->validateImages()) {
-            $badRequest = new BadRequest("Erro ao fazer upload da imagem");
-            echo $badRequest->toJson();
-            exit;
-        }
-
         $product = new Product(
             null,
             $this->title,
@@ -66,72 +59,45 @@ class CreateProductRequest
         );
 
         if (!empty($this->images)) {
-            $this->saveImages($product);
+            $this->save_uploaded_image($this->images, '/assets/product/images', $product);
         }
 
         return $productService->createProduct($product);
     }
 
-    private function saveImages(Product $product): void
+    function save_uploaded_image($image_file, $destination_folder, $product)
     {
-        foreach ($this->images['tmp_name'] as $index => $tmpName) {
-            $fileName = $this->images['name'][$index];
-            $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
-
-
-            if (is_uploaded_file($tmpName)) {
-                $fileName = uniqid('photo_', true) . ".$fileExtension";
-                if (move_uploaded_file($tmpName, __DIR__ . "/../images/$fileName")) {
-                    $product->addPhoto(new ProductPhoto(null, $fileName));
-                } else {
-                    $badRequest = new BadRequest("Erro ao fazer upload da imagem");
-                    echo $badRequest->toJson();
-                    exit;
-                }
-            }
-        }
-    }
-
-
-    private function validateImages(): bool
-    {
-        $images = $this->images;
-        $imagesSize = $images['size'];
-        $imagesName = $images['name'];
-        $imagesError = $images['error'];
-        $imagesType = $images['type'];
-
-        $success = true;
-        foreach ($this->images['tmp_name'] as $i => $tmpName) {
-            $imageSize = $imagesSize[$i];
-            $imageName = $imagesName[$i];
-            $imageError = $imagesError[$i];
-
-            if ($imageError !== 0) {
-                $badRequest = new BadRequest("Erro ao fazer upload da imagem");
-                $success = false;
-                echo $badRequest->toJson();
-                break;
-            }
-
-            if ($imageSize > 1000000) {
-                $badRequest = new BadRequest("A imagem deve ter no máximo 1MB");
-                $success = false;
-                echo $badRequest->toJson();
-                break;
-            }
-
-            $imageFileType = strtolower(pathinfo($imageName, PATHINFO_EXTENSION));
-            if ($imageFileType !== "jpg" && $imageFileType !== "png" && $imageFileType !== "jpeg") {
-                $badRequest = new BadRequest("A imagem deve ser JPG, JPEG ou PNG");
-                $success = false;
-                echo $badRequest->toJson();
-                break;
-            }
+        if ($image_file['error'] !== UPLOAD_ERR_OK) {
+            echo 'Erro ao fazer upload: ' . $image_file['error'];
+            return false;
         }
 
-        return $success;
-    }
+        $file_tmp_name = $image_file['tmp_name'];
+        $file_name = basename($image_file['name']);
+        $file_size = $image_file['size'];
+        $file_type = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
 
+        $valid_types = array('jpg', 'jpeg', 'png', 'gif');
+        if (!in_array($file_type, $valid_types)) {
+            echo 'Arquivo não permitido. Apenas JPG, JPEG, PNG e GIF.';
+            return false;
+        }
+
+        if ($file_size > 5000000) { // limitado a 5MB
+            echo 'O arquivo é muito grande.';
+            return false;
+        }
+
+        $new_file_path = $destination_folder . '/' . $file_name;
+
+        if (move_uploaded_file($file_tmp_name, $new_file_path)) {
+            $product->addPhoto(new ProductPhoto(null, $new_file_path));
+            return true;
+        } else {
+            $badRequest = new BadRequest("Erro ao fazer upload da imagem");
+            echo $badRequest->toJson();
+            exit;
+        }
+    }
 
 }

@@ -153,6 +153,28 @@ $categoryService = new CategoryService($categoryRepository);
             }
         });
     });
+
+    zipCode.addEventListener("keypress", () => {
+        console.log("oi");
+        const zipCodeValue = zipCode.value;
+        if (zipCodeValue.length >= 7) {
+            const formData = new FormData();
+            formData.append("zip_code", zipCodeValue);
+            fetch("/trabFinal/src/usecases/address.php",
+                {
+                    method: "POST",
+                    body: formData
+                })
+                .then(async response => {
+                    if (response.status === 200) {
+                        let data = await response.json()
+                        state.value = data.state;
+                        city.value = data.city;
+                        neighborhood.value = data.neighborhood;
+                    }
+                });
+        }
+    });
 </script>
 <?php
 include __DIR__ . "/../components/footer/footer.php";

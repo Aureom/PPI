@@ -154,10 +154,9 @@ $categoryService = new CategoryService($categoryRepository);
         });
     });
 
-    zipCode.addEventListener("keypress", () => {
-        console.log("oi");
+    zipCode.addEventListener("keyup", () => {
         const zipCodeValue = zipCode.value;
-        if (zipCodeValue.length >= 7) {
+        if (zipCodeValue.length === 8) {
             const formData = new FormData();
             formData.append("zip_code", zipCodeValue);
             fetch("/trabFinal/src/usecases/address.php",

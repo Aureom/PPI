@@ -41,6 +41,7 @@ class Product implements JsonSerializable
         $this->userId = $userId;
         $this->createdAt = $createdAt;
         $this->images = $image;
+        $this->interests = [];
     }
 
 

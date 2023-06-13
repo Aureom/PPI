@@ -106,7 +106,7 @@ $categoryService = new CategoryService($categoryRepository);
             </div>
             <div class="form-group">
                 <label for="images" class="form-label">Imagem:</label>
-                <input type="file" id="images" name="images" class="form-input" multiple>
+                <input type="file" id="images" name="images" class="form-input form-input-file" multiple>
             </div>
             <div class="form-group">
                 <input type="submit" value="Cadastrar" class="form-button">

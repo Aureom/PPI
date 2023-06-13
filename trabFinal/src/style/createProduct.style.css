@@ -39,6 +39,14 @@
     box-sizing: border-box;
 }
 
+.form-input-file {
+    border: none;
+    padding: 0;
+    background-color: transparent;
+    color: #666;
+    cursor: pointer;
+}
+
 .form-button {
     /*outside grid*/
     display: block;
